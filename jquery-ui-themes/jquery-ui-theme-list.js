@@ -1,0 +1,12 @@
+([
+	'black-tie',
+	'blitzer',
+	'cupertino',
+	'humanity',
+	'overcast',
+	'pepper-grinder',
+	'redmond',
+	'smoothness',
+	'sunny',
+	'ui-lightness'
+])

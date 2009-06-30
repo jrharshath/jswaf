@@ -1,0 +1,215 @@
+/* **************************** /*
+** green lush css based layout  **
+** ---------------------------- **
+** author: Yamazaki             **
+** this layout is free for      **
+** download, however you can't  **
+** redistribute it and put the  **
+** zip / rar file in your web   **
+** without any permissions from **
+** the author. thank you        **
+** ---------------------------- **
+** have fun with the layout     **
+/* **************************** */
+
+body
+{
+	font-size:       62.5%; /* reset 1em to 10px */
+	margin:          0;
+	padding:         0;
+	background:      transparent url('bg.png') top left repeat;
+	font-family:     'lucida grande', arial, tahoma, sans-serif;
+	text-align:		center !important;
+}
+
+#container
+{
+	text-align:		 left !important;
+	margin:          0 auto;
+	width:           684px;
+        padding:         0 22px;
+	position:        relative;
+	background:      transparent url('containerbg.png') top left repeat-y;
+}
+
+#header
+{
+	width:           640px;
+	height:          96px;
+	background:      transparent url('header.jpg') top left no-repeat;
+}
+
+.headtitle
+{
+	position:        relative;
+	font-family:     'lucida grande', arial, tahoma, sans-serif;
+	font-size:       30px;
+	color:           #FFF;
+	top:             8px;
+	left:            12px;
+}
+
+#menu
+{
+	height:          29px;
+        width:           640px;
+	background:      #bbd75a !important;
+	background:      #b3d24e;
+	padding:         5px 0;
+}
+
+#menu ul
+{
+	margin:          0;
+	padding:         7px;
+	background:      transparent url('menuoff.png') top left repeat-x;
+	height:          29px;
+}
+
+#menu ul li
+{
+	list-style:      none;
+	display:         inline;
+}
+
+#menu ul li a:link, #menu ul li a:active, #menu ul li a:visited
+{
+	color:           #767676;	
+	padding:         13px 7px 15px 7px;
+	font-size:       1em;
+	background:      transparent url('menuoff.png') center left repeat-x;
+	font-family:     'lucida grande', arial, sans-serif;
+	font-weight:     bold;
+	text-decoration: none;
+}
+
+#menu ul li a:hover
+{
+	background:      transparent url('menuon.png') center left repeat-x;
+}
+
+#roundedheader
+{
+	width:           640px;
+	height:          18px;
+	background:      transparent url('belowheader.png') top left no-repeat;
+}
+
+#content
+{
+	min-height:      390px;
+	width:           640px;
+	background:      transparent url('contentbg.png') top left repeat-y;
+}
+
+#leftcontainer {
+        width: 355px;
+	float:           left;
+}
+       
+.insidecontent
+{
+    margin-bottom: 20px;
+    margin-left: 10px;
+    font-family:     'lucida grande', 'franklin gothic medium', sans-serif;
+    font-size:       1.2em;
+}
+
+.insidecontent p
+{
+	margin:          0;
+	color:           #767676;
+	font-family:     'lucida grande', 'franklin gothic medium', sans-serif;
+	font-size:       1.2em;
+	line-height:     170%;
+}
+.insidecontent a, .insidecontent a:active, .insidecontent a:visited, .insidecontent a:link
+{
+    color: #3a4;
+}
+#sidebar
+{
+	padding:         10px 10px 10px 20px;
+        margin-right:    10px;
+	float:           right;
+	width:           210px;
+	background:      #f6f6f6;
+}
+
+.sidebar-item
+{
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #8a8;
+}
+
+.sidebar-item p
+{
+	margin:          0;
+	color:           #565656;
+	font-family:     'lucida grande', 'franklin gothic medium', sans-serif;
+	font-size:       1em;
+	line-height:     170%;
+}
+
+.sidebar-item a:link, #sidebar a:active, #sidebar a:visited
+{
+	text-decoration: underline;
+	color:           #e36767;
+}
+
+.sidebar-item a:hover
+{
+	text-decoration: none;
+}
+
+#roundedfooter
+{
+	width:           640px;
+	height:          17px;
+	background:      transparent url('abovefooter.png') top left no-repeat;
+}
+
+h1
+{
+	margin:          0.5em 0;
+	font-weight:     normal;
+	color:           #94C258;
+	font-size:       2.2em;
+}
+
+h2
+{
+	margin:          0.2em 0;
+	left:            2em;
+	font-size:       1.8em;
+	font-weight:     normal;
+	color:           #94c258;
+}
+
+h3
+{
+	margin:          0;
+	font-size:       1.5em;
+	font-weight:     normal;
+	color:           #94C258;
+}
+
+#footer
+{
+	width:           640px;
+	height:          39px;
+	background:      transparent url('footer.png') top left repeat-x;
+}
+#afterfooterblue
+{
+	width:           640px;
+	height:          39px;
+	background:      transparent url('footer.jpg') top left repeat-x;
+}
+#afterfooter
+{
+	width:           640px;
+	height:          5px;
+	background:      transparent url('footer.png') top left repeat-x;
+}

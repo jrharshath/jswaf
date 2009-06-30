@@ -1,0 +1,27 @@
+{			
+		"width_array":[],       // "width" of each item in actual display (textdiv) 
+	        "width_counter":0,	// current item being tracked
+	        "length_array":[],      // length of each text item
+		"scrollingtext":null,   // concatenated form of text_array
+		"scroll":true,          // to implement "pause/play" -> pause if scroll==false
+         	"speed_wait": 100,      // time before each increment in scroll
+		"string_wait":500,      // time to wait at the end of each each text item
+		"init_wait" : 1000,     // time to wait before starting to scroll
+		"obj"        : {},      // this is "textdiv" -> display space of "scrollingtext"
+		"k"          : 0,       // the "elapsed" width of the current item
+                // style for the displayed text
+                "display_style":        "font-family:verdana;font-weight:bold;color:#444;letter-spacing:1px;font-variant:small-caps;font-size:1em;display:inline",
+		"text_array":[          // the array containing text items to be shown
+			'Pawan is a good boy &#187; ',
+			'Ranjeet is a good boy &#187; ',
+			'Gagan is a good boy &#187; ',
+			'Harshath is a good boy &#187; ', 
+			'Divyanshu is a good boy &#187; ', 
+			'Amit is a good boy &#187; ', 
+			'Shashank is a good boy &#187; ', 
+			'abcde &#187; ',
+			'I am the latest addition &#187; ',
+			'What is happening &#187; '
+                ]
+}
+

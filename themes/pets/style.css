@@ -1,0 +1,39 @@
+/*** Global Settings ****/
+body {font : normal 14px/1.6em Arial, Helvetica, sans-serif;color : #2a3845;margin : 0;padding : 0;background:#FFFFFF;}
+p { margin : 0;padding : 0;}
+a:visited, a:link {color : #a43b55;text-decoration : underline;background:none;}
+a:hover {color : #a43b55;text-decoration : none;background:none;}
+h1 { color : #7a2e40;margin: 10px 0;padding-bottom : 0;font : normal 20px Georgia, serif;}
+h2 {color : #7a2e40;margin : 10px 0 10px;padding-bottom : 0;font : normal 17px Georgia, serif;}
+h3 {color : #7a2e40;margin : 10px 0;padding-bottom : 0;font : normal 15px Georgia, serif;}
+ul {padding:10px 0;margin:0 0 0 17px;list-style: square url(images/bullet.gif);}
+.box {background : #f7f7f7;padding : 15px;}
+hr { color:#dcc; }
+
+/*** Layout ****/
+#wrapper {margin : 0 auto;width : 100%;}
+#header {margin : 0 1px;}
+#bg {height : 36px;background : url(images/bg.gif) repeat-x;clear:both;}
+#nav {background : #7a2e40; padding: 0 10px; text-align : right;color : #f6dde3; height:50px;}
+#nav a { display:block; float:right; line-height:50px; padding: 0 10px;}
+#nav a:visited, #nav a:link {text-decoration : none;color : #f6dde3;}
+#nav a:hover {text-decoration : strikeout; color : #09221a; background-color:white; }}
+#main-content {margin : 0 auto;}
+/* #fa7393; */
+#logo {
+    margin-bottom :15px; 
+    height:55px; 
+    font:normal 22px Georgia; 
+    line-height:45px; 
+    color:#7a2e40;
+    background-image:url('images/big-paw.gif');
+    padding-left: 50px;
+    background-repeat: no-repeat;
+}
+#left-column {width : 60%;padding : 0 30px 30px;float : left;}
+#right-column {width : 30%;float : right; margin-bottom:10px;}
+.ftr {border-top:1px solid #dcc; width:80%;padding:10px 0 0 0; clear:both; text-align:center;margin:0 auto;}
+
+/*** SideBAR ***/
+.sidebar {width:95%; margin:0 auto; padding:10px 0; background:url(images/shadow.jpg) no-repeat top;}
+

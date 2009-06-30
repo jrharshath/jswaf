@@ -1,0 +1,38 @@
+<html>
+
+<head>
+<script type='text/javascript' src='../js/jquery.js'></script>
+<script type='text/javascript' src='../js/jquery.getcss.js'></script>
+<script type='text/javascript' src='../js/jquery.log.js'></script>
+<script type='text/javascript' src='../js/jswaf.js'></script>
+<script type='text/javascript' src='../js/firebug.js'></script>
+</head>
+<body>
+<script type='text/javascript'>
+$(document).ready( function(){
+	$j.loadTheme({ id:'pets' });
+});
+
+setTimeout( function(){
+	$j.loadBatch([
+		{ id:'pets', conf:{} },
+		{ id:'sidebarnotify', conf:{} }
+	]);
+	$j.loadModule({ id:'alertbox', conf:{} });
+	$j.loadModule({ id:'urlparser', conf:{} });
+	$j.loadModule({ id:'content', 
+					conf:{
+						headertext: 'Header Text',
+						footertext: 'Footer Text',
+						nav: {
+							text: 'Google',
+							href: 'http://google.com/'
+						}
+					}
+				});
+}, 500 ); 
+
+</script>
+
+</body>
+</html>
