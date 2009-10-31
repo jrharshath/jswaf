@@ -1,23 +1,28 @@
-/*
- * Depends:
- * var MM_conf	- is recieved from the current theme
- * jQuery		- from jquery.js
- * jQuery.log	- jquery.log.js
- */
 !window.$j && (function($){
+
 	$.jswaf = {};
 	$j = $.jswaf
+
 	var resources={},
 	    modules={},
 	    depends={};
-	var WAIT_TIME_MS=300; // time to wait between checks for loaded module
-	$j.logInternals = function() { $.log(resources); $.log(modules); $.log(depends); }
+	var _nullf=function(){}; // for internal use..
+
+	var WAIT_TIME_RECHECK_FETCHED = 300; // time to wait between checks for loaded module
+	var WAIT_TIME_LOAD_CALLBACK = 50;
+
+	// todo: these are for debugging purposes only, remove them later
+	$.jswaf.logInternals = function() { $.log(resources); $.log(modules); $.log(depends); }
+	$j.depends = depends; 
+	
 	function ModuleWrapper(id, conf, obj) {
 		this.id = id;
 		this.conf = conf;
 		this.moduleObject = obj;
 	}
+	
 	function getModulePath(conf) { return "../modules/"+conf.id+"/module.js";	}
+	
 	function fetchModule(path,callback) {
 		$.ajax({
 			type: "GET",
@@ -27,67 +32,108 @@
 			dataType: "script"
 		});
 	}
+	
 	function moduleExists(id) { return window[id]!=undefined; }
+	
 	function handleUnfetchedModules(unfetchedModuleNamesArray) { 
 		var message = "The following modules could not be instantiated:\n";
 		message += unfetchedModuleNamesArray.join(',');
 		message += "\n Do you want to continue?";
 		return confirm(message);
 	}
+	
 	function augmentResources(resList, module) {
-		for( res in resList )
+		for( var res in resList )
 			resources[res] = module;
 	}
+	
 	function moduleNotAvailable(id) { $.log( "module '"+id+"' not available!" ); }
+	
 	function moduleIsValid(obj, id) {
-		return !(!obj.id || obj.id!=id || !obj.init || !obj.main || !obj.unload || 
+		var validStructure = !(!obj.id || obj.id!=id || !obj.init || !obj.main || !obj.unload || 
 		!obj.serviceRequest || obj.req==undefined || obj.prod==undefined);
+		if( validStructure==false ) return false;
+		for( var res in obj.prod )
+			if( resources[res] ) return false;
+		return true;
 	}
+	
 	function handleInvalidModule(i){$.log("module '"+i+"' is invalid, and shall not be loaded." );}
 	
 	function canInitializeModule(module) {
-		for( req in module.req )
+		for( var req in module.req )
 			if(resources[req]==undefined) return false;
 		return true;
 	}
+
 	function handleInadequateResources(i){
 		$.log("module '"+i+"' cannot be loaded because its requruirements are not available");
 	}
+
 	function handleFailedInitalization(i){ $.log("module '"+i+"' failed during initialization");}
-	function addModule(id,obj) { modules[id]=obj; }
+
+	function addModule(obj) { modules[obj.id]=obj; }
+
+	function addDependencies(module) {
+		for( var req in module.req ) {
+			var found = false;
+			var dependents = depends[ resources[req].id ];
+			for( var moduleIdIndex in dependents ) {
+				if( dependents[ moduleIdIndex ] ==  module.id ) { found=true; break; }
+			}
+			if( found==false ) { 
+				var len = dependents.length;
+				dependents[ len ] = module.id;
+			}
+		}
+		if( !depends[ module.id ] )
+			depends[ module.id ] = [];
+	}
+
 	function startModule(obj){ obj.main(); }
 	
-	$.jswaf.loadModule = function(conf) {
-		var path = getModulePath(conf);
+	$.jswaf.loadModule = function(confobj, callback) {
+		if( !callback ) callback = _nullf;
+		function finish(val) {
+			setTimeout( function(){callback(val);},WAIT_TIME_LOAD_CALLBACK ); 
+		}
+		var path = getModulePath(confobj);
 		var done = false;
-		fetchModule(path,resetDone);
-		function resetDone(){ done=true; }
-		(function wait(c) {
-			if( !done ) { setTimeout( function(){wait(c);} , WAIT_TIME_MS); return; }
-			c();
+		var id = confobj.id;
+		function fetchDoneCallback(){ done=true; }
+
+		if( modules[id] ) {finish(true); return;} // module already exists and is loaded
+		if( moduleExists(id) ) { done=true; } // module has already been fetched, but is not executing
+		else fetchModule(path,fetchDoneCallback);
+
+		(function _w(c) { // wait until done=true
+			if( !done ) { setTimeout(function(){_w(c);},WAIT_TIME_RECHECK_FETCHED);return; } c();
 		})(function() {
-		var id = conf.id;
-		if( !moduleExists(id) ) { moduleNotAvailable(conf.id); return; }
-		var obj = new window[id]();
-		if( !moduleIsValid(obj,id) ){ handleInvalidModule(id); return; }
-		if( !canInitializeModule(obj) ){ handleInadequateResources(id); return; }
-		if( !obj.init(conf.conf) ){ handleFailedInitalization(id); return; }
+
+		if( !moduleExists(id) ) { moduleNotAvailable(confobj.id); finish(false); return; }
+		var obj = new (window[id])();
+		if( !moduleIsValid(obj,id) ){ handleInvalidModule(id); finish(false); return; }
+		if( !canInitializeModule(obj) ){ handleInadequateResources(id); finish(false); return; }
+		if( !obj.init(confobj.conf) ){ handleFailedInitalization(id); finish(false); return; }
 		augmentResources( obj.prod, obj );
-		addModule(conf.id, obj);
+		addModule(obj);
+		addDependencies(obj);
 		startModule(obj);
-		// #todo: update depends
+		finish(true);
 	});}
+
+/*
 	$.jswaf.loadBatch = function(confList) {
 		var sync_count = 0;
 		function fetchedOne() {sync_count--;}
-		for(confIndex in confList) {
+		for( var confIndex in confList) {
 			var path = getModulePath(confList[confIndex]);
 			sync_count ++;
 			fetchModule(path,fetchedOne);
 		}
 		(function wait(c) {
 			if( sync_count!= 0 ) {
-				setTimeout( function(){wait(c)}, WAIT_TIME_MS ); return;
+				setTimeout( function(){wait(c)}, WAIT_TIME_RECHECK_FETCHED); return;
 			} c();
 		})(function() {
 		function filterDuplicateModules(c){}
@@ -115,7 +161,7 @@
 		batchAugmentModules(newModules);
 		
 		depends = generateModuleDependencies();
-		for( ind in newModules)
+		for( var ind in newModules)
 			newModules[ind].main();
 		});
 		
@@ -123,7 +169,7 @@
 			var mnf = []; var mnfi=0;
 			var moduleWrapperList = {};
 			var index;
-			for( confIndex in confList ) {
+			for( var confIndex in confList ) {
 				var confItem = confList[confIndex];
 				var moduleId = confItem.id;
 				if( window[moduleId]==undefined ) {
@@ -165,7 +211,7 @@
 			var doOneMorePass = true;
 			
 			while(doOneMorePass) { doOneMorePass = false;
-			for( mwlIndex in mwl ) {
+			for( var mwlIndex in mwl ) {
 				wrapper = mwl[mwlIndex];
 				id = wrapper.id;
 				module = wrapper.moduleObject;
@@ -173,7 +219,7 @@
 					var moduleInitSucceeded = module.init(wrapper.conf);
 					if( moduleInitSucceeded ) {
 						doOneMorePass = true;
-						for( res in module.prod ) newResources[res] = module; // #todo check for duplication of resources!
+						for( var res in module.prod ) newResources[res] = module; // #todo check for duplication of resources!
 						newModules[id] = module; // #todo check for duplication of module id!
 					} else 
 						failedModuleIds[fmInd++]=id;
@@ -183,35 +229,39 @@
 			return { newModules: newModules, newResources: newResources, failedModuleIds: failedModuleIds };
 		}
 		function addSoftRequirements(mwl) {
-			for( index in mwl ) {
+			for( var index in mwl ) {
 				var wrapper = mwl[index];
 				var module = wrapper.moduleObject;
 				if( wrapper.conf._req ) {
 					softreq = wrapper.conf._req;
-					for( k in softreq )
+					for( var k in softreq )
 						module.req[k] = softreq[k];
 				}
 			}
 		}
 		function canInitializeModuleInBatch(mod,newRes) {
-			for( req in mod.req )
+			for( var req in mod.req )
 				if( !resources[req] && !newRes[req] ) return false;
 			return true;
 		}
 	}
+	*/
+
 	function batchAugmentResources(resModList) {
-		for( res in resModList )
+		for( var res in resModList )
 			resources[res] = resModList[res];
 	}
+
 	function batchAugmentModules(idModList) {
 		for( id in idModList )
 			modules[id] = idModList[id];
 	}
+
 	function generateModuleDependencies() {
 		var d={};
 		for( dependent_id in modules ) {
 			var dependent = modules[ dependent_id ];
-			for( req in dependent.req ) {
+			for( var req in dependent.req ) {
 				var dependee_id = resources[req].id;
 				if( !d[dependee_id] ) d[dependee_id] = [dependent_id];
 				else d[dependee_id][ d[dependee_id].length ] = dependent_id;
@@ -219,11 +269,14 @@
 		}
 		return d;
 	}
+	
 	$.jswaf.getResource = function(res) {
 		if( !resources[res] ) return null;
 		return resources[res].serviceRequest(res);
 	}
+	
 	function getThemePath(theme) { return "../themes/"+theme.id+"/"; }
+	
 	$.jswaf.loadTheme = function(theme) {
 		var path = getThemePath(theme);
 		$.get(path+"theme.js", function(data) {
@@ -235,4 +288,6 @@
 		$('body').prepend(d);
 		});		
 	});}
+	
 })(jQuery);
+

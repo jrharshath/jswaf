@@ -1,0 +1,3 @@
+ * add jquery-ui suport
+ * add cache-skip support to fetching of css, js etc (e.g., csspath.css?rand=<timestamp>)
+ * think how i18n support can be added to jswaf. Aslo consider integrating jswaf-i18n with jquery-ui-i18n

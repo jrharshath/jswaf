@@ -1,6 +1,6 @@
-function content()
+function pagecontent()
 {
-    this.id = 'content';
+    this.id = 'pagecontent';
 	this.conf = null;
     this.unload = function() { return true; }
     this.init   = function(conf){ this.conf = conf; return true; }

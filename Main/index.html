@@ -5,7 +5,6 @@
 <script type='text/javascript' src='../js/jquery.getcss.js'></script>
 <script type='text/javascript' src='../js/jquery.log.js'></script>
 <script type='text/javascript' src='../js/jswaf.js'></script>
-<script type='text/javascript' src='../js/firebug.js'></script>
 </head>
 <body>
 <script type='text/javascript'>
@@ -13,14 +12,16 @@ $(document).ready( function(){
 	$j.loadTheme({ id:'pets' });
 });
 
+function sampleCallback(ret) {
+	$.log(ret);
+}
+
 setTimeout( function(){
-	$j.loadBatch([
-		{ id:'pets', conf:{} },
-		{ id:'sidebarnotify', conf:{} }
-	]);
+	$j.loadModule({ id:'pets', conf:{} }, sampleCallback);
+	$j.loadModule({ id:'sidebarnotify', conf:{} });
 	$j.loadModule({ id:'alertbox', conf:{} });
-	$j.loadModule({ id:'urlparser', conf:{} });
-	$j.loadModule({ id:'content', 
+	$j.loadModule({ id:'urlparser', conf:{} }, sampleCallback);
+	$j.loadModule({ id:'pagecontent',
 					conf:{
 						headertext: 'Header Text',
 						footertext: 'Footer Text',
